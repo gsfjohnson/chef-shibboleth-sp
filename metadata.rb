@@ -9,7 +9,6 @@ recipe            "shibboleth-sp::apache", "Base recipe and Apache handling."
 recipe            "shibboleth-sp::iis", "Base recipe and IIS handling."
 recipe            "shibboleth-sp::simple", "Base recipe and simple attribute-driven configuration."
 recipe            "shibboleth-sp::sp_cert_key", "Recipe to configure sp cert and key using databags or node attributes."
-depends           "yum", ">= 3.0.0"
 
 %w{ apache2 windows }.each do |d|
   depends d
@@ -18,3 +17,7 @@ end
 %w{ centos redhat ubuntu windows }.each do |os|
   supports os
 end
+
+depends 'apache2'
+depends 'windows'
+#depends 'yum'

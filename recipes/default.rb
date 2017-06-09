@@ -21,7 +21,7 @@ repo_url = "http://download.opensuse.org/repositories/security:/shibboleth"
 
 case node['platform']
 when 'centos'
-  include_recipe "yum"
+  include_recipe "apache2"
   case node['platform_version'].to_i
   when 5
     repo_location = "CentOS_5"
@@ -39,9 +39,22 @@ when 'centos'
   end
 
   package "shibboleth"
+
+
+  if node[:kernel][:machine] == 'x86_64'
+    shib_lib_path = '/usr/lib64/shibboleth'
+  elsif node[:kernel][:macine] == 'i686'
+    shib_lib_path = '/usr/lib/shibboleth'
+  end
+
+  apache_module 'shib' do
+    conf true
+    module_path "#{shib_lib_path}/mod_shib_22.so"
+    identifier "mod_shib"
+  end
+
 when 'redhat'
   unless node['shibboleth-sp']['redhat']['use_rhn']
-    include_recipe "yum"
     repo_location = "RHEL_#{node['platform_version'].to_i}"
 
     yum_repository "security:shibboleth" do
